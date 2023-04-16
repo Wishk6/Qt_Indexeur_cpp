@@ -11,7 +11,8 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    mythread.cpp
+    mythread.cpp \
+    stringParser.cpp
 
 HEADERS += \
     mainwindow.h \

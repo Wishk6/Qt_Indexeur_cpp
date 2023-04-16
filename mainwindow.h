@@ -19,7 +19,6 @@ public:
 
 private slots:
     void on_stopBtn_clicked();
-
     void on_startBtn_clicked();
     void jobStarted();
     void jobFinished();

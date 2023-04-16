@@ -39,12 +39,11 @@ void MainWindow::on_stopBtn_clicked()
 
 void MainWindow::jobFinished()
 {
-    qDebug() << __FUNCTION__ << __LINE__;
+    qDebug() << __FUNCTION__ << __TIMESTAMP__;
 }
 
 void MainWindow::valueChanged(int val)
 {
-    qDebug() << __FUNCTION__ << __LINE__ << val;
     ui->valueLabel->setText(QString("The number of file scanned is %1").arg(val));
 }
 
