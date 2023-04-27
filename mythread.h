@@ -2,6 +2,16 @@
 #define MYTHREAD_H
 
 #include <QThread>
+#include <QDateTime>
+
+struct FileInfo {
+   QString name;
+   QString path;
+   QDateTime created_at;
+   QDateTime updated_at;
+   qint64 size;
+   QString extension;
+};
 
 class MyThread : public QThread
 {
@@ -12,7 +22,7 @@ public:
     void run() override;
     void setStopAsked(bool stopAsked);
 signals:
-    void valueChanged(int i);
+    void valueChanged(FileInfo fileInformation);
 };
 
 #endif // MYTHREAD_H
