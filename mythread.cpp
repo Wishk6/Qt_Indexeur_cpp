@@ -14,9 +14,10 @@ MyThread::MyThread()
 
 }
 
+
 void MyThread::run() {
     // Ouvrir le répertoire à partir du chemin spécifié
-    QDir dir("C:/Users/sauri/OneDrive/Bureau/G");
+    QDir dir("C:/Users/sauri/OneDrive/Bureau/CodesProjets/asyncVsSync");
 
     QDirIterator it(dir.absolutePath(), QDirIterator::Subdirectories);
     int i = 0;
@@ -35,13 +36,8 @@ void MyThread::run() {
         actualFileInfo.updated_at = fileInfo.lastModified();
         actualFileInfo.size = fileInfo.size();
         actualFileInfo.extension = fileInfo.completeSuffix();
-
         valueChanged(actualFileInfo);
-
-        QThread::usleep(1);
     }
-    qDebug() << it.hasNext() << "test";
-    // Réinitialiser la variable d'arrêt du thread
     _stopAsked = false;
 }
 

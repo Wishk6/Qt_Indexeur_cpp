@@ -19,7 +19,10 @@
      <widget class="QWidget" name="widget" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <layout class="QGridLayout" name="gridLayout">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="spacing">
+          <number>10</number>
+         </property>
          <property name="sizeConstraint">
           <enum>QLayout::SetMinimumSize</enum>
          </property>
@@ -32,16 +35,13 @@
          <property name="rightMargin">
           <number>0</number>
          </property>
-         <property name="spacing">
-          <number>10</number>
-         </property>
-         <item row="0" column="0">
+         <item>
           <widget class="QWidget" name="RepositoryList1" native="true">
            <property name="autoFillBackground">
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(255, 255, 255);</string>
+            <string notr="true">background-color: rgb(255, 255, 255);border-radius:5px;max-height:320px;max-width:280px;</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
@@ -52,23 +52,27 @@
                </font>
               </property>
               <property name="text">
-               <string>Whitelist Folder</string>
+               <string>Folders</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QListWidget" name="listWidget"/>
+             <widget class="QListWidget" name="listWidget">
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
          </item>
-         <item row="0" column="2">
+         <item>
           <widget class="QWidget" name="extensionsListGroup" native="true">
            <property name="autoFillBackground">
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(255, 255, 255);</string>
+            <string notr="true">background-color: rgb(255, 255, 255);border-radius:5px;max-height:320px;max-width:280px;</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
@@ -84,7 +88,11 @@
              </widget>
             </item>
             <item>
-             <widget class="QListWidget" name="listWidget_2"/>
+             <widget class="QListWidget" name="listWidget_2">
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -94,17 +102,63 @@
        <item>
         <layout class="QVBoxLayout" name="buttonLayout">
          <property name="sizeConstraint">
-          <enum>QLayout::SetMinimumSize</enum>
+          <enum>QLayout::SetFixedSize</enum>
+         </property>
+         <property name="leftMargin">
+          <number>10</number>
+         </property>
+         <property name="rightMargin">
+          <number>10</number>
          </property>
          <item>
           <widget class="QPushButton" name="startBtn">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">margin:10px;padding:10px;</string>
+           </property>
            <property name="text">
             <string>Lancer l'indexation</string>
            </property>
           </widget>
          </item>
          <item>
+          <widget class="QProgressBar" name="progressBar">
+           <property name="styleSheet">
+            <string notr="true">margin:auto</string>
+           </property>
+           <property name="value">
+            <number>0</number>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="stopBtn">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">margin:10px;padding:10px;</string>
+           </property>
            <property name="text">
             <string>Arrêter l'indexation</string>
            </property>

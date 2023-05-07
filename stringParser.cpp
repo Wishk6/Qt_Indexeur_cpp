@@ -2,29 +2,7 @@
 
 
 //QStringList stringToList(QString line) {
-//    QStringList list;
-//    QRegExp     rx("\"([^\"]*)\"");
-//    int         pos = 0;
-//    while ((pos = rx.indexIn(line, pos)) != -1) {
-//        list << rx.cap(0);
-//        pos += rx.matchedLength();
-//    }
-//    for (auto l : qAsConst(list)) {
-//        QString ol = l;
-//        l.replace(" ", "<SPC>");
-//        line.replace(ol, l);
-//    }
 
-//    list.clear();
-//    QStringList tmp = line.split(' ');
-//    for (auto l : qAsConst(tmp)) {
-//        if (l.isEmpty())
-//            continue;
-
-//        list << l.replace("<SPC>", " ");
-//    }
-
-//    return list;
 //}
 
 
