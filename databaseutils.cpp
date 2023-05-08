@@ -59,8 +59,6 @@ void DatabaseUtils::setQueue(QQueue<FileInfo>* queue) {
     queue = queue;
 }
 
-
-
 void DatabaseUtils::insertDataFromQueue(QQueue<FileInfo>* queue)
 {
     if (queue->isEmpty()) {
@@ -98,7 +96,6 @@ void DatabaseUtils::insertDataFromQueue(QQueue<FileInfo>* queue)
     }
 }
 
-
 int DatabaseUtils::getData()
 {
     QSqlQuery query;
@@ -124,4 +121,47 @@ int DatabaseUtils::getData()
     return 0;
 }
 
+int DatabaseUtils::countItems() {
+    int count = 0;
+
+    QSqlQuery query(_db);
+    if (query.exec("SELECT COUNT(*) FROM filesInfo")) {
+        if (query.next()) {
+            count = query.value(0).toInt();
+        }
+    } else {
+        qDebug() << "Erreur lors de la requête COUNT : " << query.lastError().text();
+    }
+    return count;
+}
+
+QVector<FileInfo> DatabaseUtils::getDataWithParams(QString fileName, QString queryInput) {
+    QVector<FileInfo> result;
+    if(_db.open()) {
+        QSqlQuery query(_db);
+        qDebug() << queryInput;
+        qDebug() << fileName;
+        query.prepare(queryInput);
+        query.bindValue(":file", fileName);
+        query.exec();
+        if(!query.exec()) {
+            qDebug() << query.lastError().text();
+            return result;
+        }
+
+        while(query.next()) {
+            FileInfo fileInfo;
+            fileInfo.name = query.value("filename").toString();
+            fileInfo.path = query.value("path").toString();
+            fileInfo.created_at = QDateTime::fromString(query.value("creation_date").toString(), "yyyy-MM-ddThh:mm:ss");
+            fileInfo.updated_at = QDateTime::fromString(query.value("last_modified").toString(), "yyyy-MM-ddThh:mm:ss");
+            fileInfo.size = query.value("size").toLongLong();
+            fileInfo.extension = query.value("ext").toString();
+            result.append(fileInfo);
+        }
+    } else {
+        qDebug() << "Error while opening database";
+    }
+    return result;
+}
 

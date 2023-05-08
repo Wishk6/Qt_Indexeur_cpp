@@ -20,7 +20,8 @@ public:
     void insertDataFromQueue(QQueue<FileInfo>* _queue);
     int getData();
     void setQueue(QQueue<FileInfo> *queue);
-
+    int countItems();
+    QVector<FileInfo> getDataWithParams(QString formattedInput,QString fileName);
 private:
     QSqlDatabase  _db;
 };

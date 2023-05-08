@@ -3,24 +3,26 @@
 #include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), _thread(new MyThread),_insertionThread(new InsertionThread),
+    : QMainWindow(parent), _thread(new LectureThread),_insertionThread(new InsertionThread),_searchLexer(new SearchLexer),
       ui(new Ui::MainWindow), _databaseUtils(new DatabaseUtils),
       _queue(new QQueue<FileInfo>)
 {
     ui->setupUi(this);
+    ui->indexationTabWidget->setTabText(0,"Interface d'indexation");
+    ui->indexationTabWidget->setTabText(1,"Interface de recherche");
+    ui->progressBar->setVisible(false);
 
+    // TODO:  enlever tous les setup une fois que l'indexation passera par le lexer
     setDefaultParameters();
-
     _databaseUtils->setupDatabase();
     _databaseUtils->createTable();
-    _insertionThread->setQueue(_queue); // Pass the queue to the insertion thread
-    _databaseUtils->setQueue(_queue); // Pass the queue to the database utils
 
-    connect(_thread, &MyThread::started, this, &MainWindow::jobStarted);
-    connect(_thread, &MyThread::finished, this, &MainWindow::jobFinished);
-    connect(_thread, &MyThread::valueChanged, this, &MainWindow::valueChanged);
+    ui->dbCount->setText(QString::number(_databaseUtils->countItems()));
+
+    connect(_thread, &LectureThread::started, this, &MainWindow::jobStarted);
+    connect(_thread, &LectureThread::finished, this, &MainWindow::jobFinished);
+    connect(_thread, &LectureThread::valueChanged, this, &MainWindow::valueChanged);
     connect(_insertionThread, &InsertionThread::insertionAvailable, this, &MainWindow::insertionAvailable);
-
 }
 
 MainWindow::~MainWindow()
@@ -35,10 +37,9 @@ void MainWindow::setDefaultParameters() {
     QDir rootDir("/");
     QStringList topLevelFolders = rootDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
     std::string extensions[] = {
-        ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".jpeg", ".jpg", ".png",
-        ".gif", ".mp3", ".mp4", ".avi", ".mov", ".txt", ".html", ".htm", ".xml", ".zip",
-        ".rar", ".exe", ".dll", ".bat", ".iso"};
-
+        "doc", "docx", "xls", "xlsx", "ppt", "pptx", "pdf", "jpeg", "jpg", "png",
+        "gif", "mp3", "mp4", "avi", "mov", "txt", "html", "htm", "xml", "zip",
+        "rar", "exe", "dll", "bat", "iso"};
 
     // Ajoute les extensions à la liste
     for (const auto& extension : extensions) {
@@ -49,7 +50,7 @@ void MainWindow::setDefaultParameters() {
     }
     // Ajoute les folders à la liste
     for (const QString &folder : topLevelFolders) {
-        QListWidgetItem *item = new QListWidgetItem(folder);
+        QListWidgetItem *item =new QListWidgetItem(rootDir.absolutePath() + folder);;
         item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
         item->setCheckState(Qt::Unchecked);
         ui->listWidget->addItem(item);
@@ -57,38 +58,38 @@ void MainWindow::setDefaultParameters() {
 
 }
 
+QStringList MainWindow::getIndexationParameters(QListWidget *_myListWidget)
+{
+    QStringList selectedItemsList; // Liste pour stocker les noms des dossiers sélectionnés
 
-QStringList MainWindow::getIndexationParameters() {
-
-
-    QList<QString> selectedFolders; // Liste pour stocker les noms des dossiers sélectionnés
-
-    for (int i = 0; i < ui->listWidget->count(); ++i) {
-        QListWidgetItem* item = ui->listWidget->item(i);
+    for (int i = 0; i < _myListWidget->count(); ++i) {
+        QListWidgetItem* item = _myListWidget->item(i);
         if (item->checkState() == Qt::Checked) {
-            QString folderName = item->text(); // Récupérer le nom du dossier à partir de l'élément de la liste
-            selectedFolders.append(folderName); // Ajouter le nom du dossier à la liste
+            QString extensionName = item->text(); // Récupérer le nom du dossier à partir de l'élément de la liste
+            selectedItemsList.append(extensionName); // Ajouter le nom du dossier à la liste
         }
     }
-    return selectedFolders;
+    return selectedItemsList;
 }
 
 
 void MainWindow::on_startBtn_clicked()
 {
-    //    _thread->start();
-    //    _insertionThread->start();
-    //    ui->progressBar->setRange(0, 0);
-    //    ui->startBtn->setDisabled(true);
-    //    ui->stopBtn->setDisabled(false);
-    qDebug() << getIndexationParameters();
-        // Faire quelque chose avec le chemin du dossier sélectionné
+    _thread->setSelectedFolders(getIndexationParameters(ui->listWidget));
+    _thread->setSelectedExtensions(getIndexationParameters(ui->listWidget_2));
+    _thread->start();
 
+    _insertionThread->start();
+    ui->progressBar->setVisible(true);
+    ui->progressBar->setRange(0, 0);
+    ui->startBtn->setDisabled(true);
+    ui->stopBtn->setDisabled(false);
 }
 
 void MainWindow::jobStarted()
 {
-
+    _insertionThread->setQueue(_queue); // Pass the queue to the insertion thread
+    _databaseUtils->setQueue(_queue); // Pass the queue to the database utils
 }
 
 void MainWindow::on_stopBtn_clicked()
@@ -103,6 +104,7 @@ void MainWindow::jobFinished()
 {
     _insertionThread->setStopAsked(true);
     ui->stopBtn->setDisabled(true);
+    ui->startBtn->setDisabled(false);
     updateProgressBar();
 
 }
@@ -124,13 +126,21 @@ void MainWindow::updateProgressBar()
     ui->progressBar->setValue(ui->progressBar->maximum());
 }
 
-
-void MainWindow::on_btnSearch_clicked()
+void MainWindow::on_pushButton_clicked()
 {
-    //    m_lexer->setPrompt(ui->linePrompt->text());
-    //    m_lexer->compute();
-    //    ui->animalOutput->setText(m_lexer->getAnimal());
-    //    ui->determinantOutput->setText(m_lexer->getDeterminant());
-    //    ui->pronounOutput->setText(m_lexer->getPronoun());
-    //    ui->verbOutput->setText(m_lexer->getVerb());
+    QStringList input = ui->searchInput->text().split(" ");
+    QString result = _searchLexer->Tokenize(input, _databaseUtils);
+    qDebug(result);
 }
+
+//void MainWindow::on_SearchWindowBtn_clicked()
+//{
+
+//    //    m_lexer->setPrompt(ui->linePrompt->text());
+//    //    m_lexer->compute();
+//        // set dans l'ui après recherche
+//}
+
+
+
+

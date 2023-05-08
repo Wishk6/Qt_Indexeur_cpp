@@ -10,27 +10,20 @@ CONFIG += c++17
 
 SOURCES += \
     databaseutils.cpp \
-    filefsm.cpp \
-    filelexer.cpp \
-    fsm.cpp \
     insertionthread.cpp \
-    lexer.cpp \
+    lecturethread.cpp \
     main.cpp \
     mainwindow.cpp \
-    mythread.cpp \
-    state.cpp \
-    stringParser.cpp
+    searchlexer.cpp \
+    state.cpp
 
 HEADERS += \
     databaseutils.h \
     fileInfoStruct.h \
-    filefsm.h \
-    filelexer.h \
-    fsm.h \
     insertionthread.h \
-    lexer.h \
+    lecturethread.h \
     mainwindow.h \
-    mythread.h \
+    searchlexer.h \
     state.h
 
 FORMS += \
@@ -40,3 +33,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    README.md
