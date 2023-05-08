@@ -13,7 +13,7 @@
 #include <LectureThread.h>
 #include <databaseutils.h>
 #include <insertionthread.h>
-#include <searchlexer.h>
+//#include <searchlexer.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,7 +24,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     LectureThread * _thread = nullptr;
     InsertionThread * _insertionThread= nullptr;
-    SearchLexer * _searchLexer;
+//    SearchLexer * _searchLexer;
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;

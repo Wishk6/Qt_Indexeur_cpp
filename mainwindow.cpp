@@ -3,7 +3,7 @@
 #include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), _thread(new LectureThread),_insertionThread(new InsertionThread),_searchLexer(new SearchLexer),
+    : QMainWindow(parent), _thread(new LectureThread),_insertionThread(new InsertionThread)/*,_searchLexer(new SearchLexer)*/,
       ui(new Ui::MainWindow), _databaseUtils(new DatabaseUtils),
       _queue(new QQueue<FileInfo>)
 {
@@ -106,7 +106,7 @@ void MainWindow::jobFinished()
     ui->stopBtn->setDisabled(true);
     ui->startBtn->setDisabled(false);
     updateProgressBar();
-
+    ui->dbCount->setText(QString::number(_databaseUtils->countItems()));
 }
 
 void MainWindow::valueChanged(FileInfo fileInformation)
@@ -128,9 +128,9 @@ void MainWindow::updateProgressBar()
 
 void MainWindow::on_pushButton_clicked()
 {
-    QStringList input = ui->searchInput->text().split(" ");
-    QString result = _searchLexer->Tokenize(input, _databaseUtils);
-    qDebug(result);
+    //    QStringList input = ui->searchInput->text().split(" ");
+    //    QString result = _searchLexer->Tokenize(input, _databaseUtils);
+    //    qDebug(result);
 }
 
 //void MainWindow::on_SearchWindowBtn_clicked()
